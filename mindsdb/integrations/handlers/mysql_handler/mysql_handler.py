@@ -133,7 +133,7 @@ class MySQLHandler(DatabaseHandler):
                 )
                 connection.rollback()
 
-        if need_to_close is True:
+        if need_to_close:
             self.disconnect()
 
         return response
@@ -161,8 +161,7 @@ class MySQLHandler(DatabaseHandler):
         Show details about the table
         """
         q = f"DESCRIBE {table_name};"
-        result = self.native_query(q)
-        return result
+        return self.native_query(q)
 
 
 connection_args = OrderedDict(

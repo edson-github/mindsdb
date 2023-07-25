@@ -125,7 +125,7 @@ class LangChainHandler(BaseMLEngine):
 
         if args.get('mode') != 'conversational':
             if 'prompt_template' not in args and 'prompt_template' not in pred_args:
-                raise Exception(f"This model expects a prompt template, please provide one.")
+                raise Exception("This model expects a prompt template, please provide one.")
 
         if 'stops' in pred_args:
             self.stops = pred_args['stops']
@@ -352,7 +352,7 @@ class LangChainHandler(BaseMLEngine):
                         completions.append(response)
                 except Exception as e:
                     completions.append(f'agent failed with error:\n{str(e)[:50]}...')
-            return [c for c in completions]
+            return list(completions)
 
         completion = _completion(agent, prompts)
 
@@ -493,8 +493,7 @@ class LangChainHandler(BaseMLEngine):
                 # for them, we report the last observed value
                 raise Exception('This model needs to be used before it can be described.')
 
-            description = pd.DataFrame(info)
-            return description
+            return pd.DataFrame(info)
         else:
             tables = ['info']
             return pd.DataFrame(tables, columns=['tables'])

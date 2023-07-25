@@ -76,7 +76,7 @@ class QuickbooksHandler(APIHandler):
             response.error_message = f'Error connecting to Quickbooks API: {e}. '
             log.logger.error(response.error_message)
 
-        if response.success is False and self.is_connected is True:
+        if not response.success and self.is_connected is True:
             self.is_connected = False
 
         return response
