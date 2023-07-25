@@ -89,7 +89,7 @@ class PlaidHandler(APIHandler):
             response.error_message = f'Error connecting to Plaid api: {e}. '
             log.logger.error(response.error_message)
 
-        if response.success is False and self.is_connected is True:
+        if not response.success and self.is_connected is True:
             self.is_connected = False
 
         return response
@@ -171,9 +171,7 @@ class PlaidHandler(APIHandler):
                 else:
                     message_dict[f'account_{i}'] = obj[i]
             messages.append(message_dict)
-        df = pd.DataFrame(messages)
-
-        return df
+        return pd.DataFrame(messages)
 
     def get_transactions(self, params={}):
         '''
@@ -186,12 +184,11 @@ class PlaidHandler(APIHandler):
         '''
 
         self.connect()
-        if params.get('start_date') and params.get('end_date'):
-            start_date = datetime.strptime(params.get('start_date'), '%Y-%m-%d').date()
-            end_date = datetime.strptime(params.get('end_date'), '%Y-%m-%d').date()
-        else:
+        if not params.get('start_date') or not params.get('end_date'):
             raise Exception('start_date and end_date is required in format YYYY-MM-DD ')
-      
+
+        start_date = datetime.strptime(params.get('start_date'), '%Y-%m-%d').date()
+        end_date = datetime.strptime(params.get('end_date'), '%Y-%m-%d').date()
         request = TransactionsGetRequest(
             access_token=self.access_token,
             start_date=start_date,

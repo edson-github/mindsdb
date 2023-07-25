@@ -103,7 +103,7 @@ class TransactionTable(BalanceTable):
 
     '''
 
-    def select(self, query: ast.Select) :
+    def select(self, query: ast.Select):
         '''Select data from the transaction table and return it as a pandas DataFrame.
 
         Args:
@@ -119,7 +119,7 @@ class TransactionTable(BalanceTable):
 
             op = '==' if op == '=' else op  # converting '=' to '=='
 
-            if (v == 'start_date' or v == 'end_date'):
+            if v in ['start_date', 'end_date']:
                 params[v] = c
 
             elif v in ['date', 'authorized_date'] or isinstance(c, str):

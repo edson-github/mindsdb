@@ -111,9 +111,9 @@ class PinotHandler(DatabaseHandler):
             log.logger.error(f'Error connecting to Pinot, {e}!')
             response.error_message = str(e)
         finally:
-            if response.success is True and need_to_close:
+            if response.success and need_to_close:
                 self.disconnect()
-            if response.success is False and self.is_connected is True:
+            if not response.success and self.is_connected is True:
                 self.is_connected = False
 
         return response
@@ -134,8 +134,7 @@ class PinotHandler(DatabaseHandler):
 
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
-            if result:
+            if result := cursor.fetchall():
                 response = Response(
                     RESPONSE_TYPE.TABLE,
                     data_frame=pd.DataFrame(
@@ -154,7 +153,7 @@ class PinotHandler(DatabaseHandler):
             )
 
         cursor.close()
-        if need_to_close is True:
+        if need_to_close:
             self.disconnect()
 
         return response
@@ -186,15 +185,12 @@ class PinotHandler(DatabaseHandler):
             api_url = f"{self.connection_data['scheme']}://{api_url}"
             result = requests.get(api_url)
 
-        response = Response(
+        return Response(
             RESPONSE_TYPE.TABLE,
             data_frame=pd.DataFrame(
-                json.loads(result.content)['tables'],
-                columns=['table_name']
-            )
+                json.loads(result.content)['tables'], columns=['table_name']
+            ),
         )
-
-        return response
 
     def get_columns(self, table_name: str) -> StatusResponse:
         """
@@ -215,12 +211,7 @@ class PinotHandler(DatabaseHandler):
         df = pd.DataFrame(json.loads(result.content)['dimensionFieldSpecs'])
         df = df.rename(columns={'name': 'column_name', 'dataType': 'data_type'})
 
-        response = Response(
-            RESPONSE_TYPE.TABLE,
-            data_frame=df
-        )
-
-        return response
+        return Response(RESPONSE_TYPE.TABLE, data_frame=df)
 
 
 connection_args = OrderedDict(

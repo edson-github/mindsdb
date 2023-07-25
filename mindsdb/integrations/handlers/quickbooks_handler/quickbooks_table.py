@@ -11,7 +11,7 @@ class AccountsTable(APITable):
         for key, value in data.items():
             if isinstance(value, dict):
                 flattened_sub_dict = self.flatten_dict(value, f"{key}_")
-                flat_data.update(flattened_sub_dict)
+                flat_data |= flattened_sub_dict
             else:
                 flat_data[f"{prefix}{key}"] = value
         return flat_data
@@ -65,7 +65,7 @@ class PurchasesTable(APITable):
         for key, value in data.items():
             if isinstance(value, dict):
                 flattened_sub_dict = self.flatten_dict(value, f"{key}_")
-                flat_data.update(flattened_sub_dict)
+                flat_data |= flattened_sub_dict
             elif isinstance(value, list):
                 for i, item in enumerate(value):
                     if isinstance(item, dict):
@@ -130,7 +130,7 @@ class BillPaymentsTable(APITable):
         for key, value in data.items():
             if isinstance(value, dict):
                 flattened_sub_dict = self.flatten_dict(value, f"{prefix}{key}_")
-                flat_data.update(flattened_sub_dict)
+                flat_data |= flattened_sub_dict
             elif isinstance(value, list):
                 for i, item in enumerate(value):
                     if isinstance(item, dict):
@@ -194,7 +194,7 @@ class VendorsTable(APITable):
         for key, value in data.items():
             if isinstance(value, dict):
                 flattened_sub_dict = self.flatten_dict(value, f"{key}_")
-                flat_data.update(flattened_sub_dict)
+                flat_data |= flattened_sub_dict
             else:
                 flat_data[f"{prefix}{key}"] = value
         return flat_data
@@ -244,7 +244,7 @@ class BillsTable(APITable):
         for key, value in data.items():
             if isinstance(value, dict):
                 flattened_sub_dict = self.flatten_dict(value, f"{prefix}{key}_")
-                flat_data.update(flattened_sub_dict)
+                flat_data |= flattened_sub_dict
             elif isinstance(value, list):
                 for i, item in enumerate(value):
                     if isinstance(item, dict):
@@ -323,7 +323,7 @@ class EmployeesTable(APITable):
         for key, value in data.items():
             if isinstance(value, dict):
                 flattened_sub_dict = self.flatten_dict(value, f"{prefix}{key}_")
-                flat_data.update(flattened_sub_dict)
+                flat_data |= flattened_sub_dict
             elif isinstance(value, list):
                 for i, item in enumerate(value):
                     if isinstance(item, dict):
